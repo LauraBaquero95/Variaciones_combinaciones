@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Variaciones vs Combinaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        
+        .presentation-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .presentation-header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .intro-card {
+            border-radius: 15px;
+            padding: 30px;
+            height: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .intro-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .intro-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .intro-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .objective-card {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border-color: #ff6b6b !important;
+        }
+        
+        .objective-card .card-icon { color: #e74c3c; }
+        
+        .text-card {
+            background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%);
+            border-color: #4ecdc4 !important;
+        }
+        
+        .text-card .card-icon { color: #3498db; }
+        
+        .video-card {
+            background: linear-gradient(135deg, #f5f0ff 0%, #e8dcff 100%);
+            border-color: #9b59b6 !important;
+        }
+        
+        .video-card .card-icon { color: #764ba2; }
+        
+        .modal-header.objective { background: linear-gradient(135deg, #ff6b6b, #e74c3c); }
+        .modal-header.text { background: linear-gradient(135deg, #4ecdc4, #3498db); }
+        .modal-header.video { background: linear-gradient(135deg, #9b59b6, #764ba2); }
+        
+        .modal-header {
+            color: white;
+            border-bottom: none;
+        }
+        
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            max-height: 90vh;
+        }
+        
+        .modal-body {
+            max-height: calc(90vh - 200px);
+            overflow-y: auto;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .video-container video,
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .concept-card {
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        
+        .concept-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .variation-card {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+        }
+        
+        .combination-card {
+            border-color: #4ecdc4;
+            background: linear-gradient(135deg, #f0fffe, #e0f7fa);
+        }
+        
+        .formula-box {
+            background: white;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .section-title {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            margin: 30px 0 20px 0;
+        }
+        
+        .demo-item {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-item:hover {
+            transform: scale(1.05);
+        }
+        
+        .variation-demo {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+        
+        .combination-demo {
+            border-color: #4ecdc4;
+            background: #f0fffe;
+        }
+        
+        .calculation-step {
+            background: #e8f5e8;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        
+        .result-highlight {
+            background: #d4edda;
+            border: 3px solid #28a745;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .interactive-section {
+            background: white;
+            border: 3px solid #17a2b8;
+            border-radius: 15px;
+            padding: 30px;
+        }
+        
+        .key-differences {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .difference-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .difference-icon {
+            font-size: 2em;
+            margin-right: 15px;
+            min-width: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-container">
+            <div class="presentation-header">
+                <h1><i class="bi bi-bar-chart-fill"></i> Variations vs Combinations</h1>
+                <p class="lead mb-0">Visual Mathematical Analysis</p>
+            </div>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="intro-card objective-card text-center" data-bs-toggle="modal" data-bs-target="#cardModal" onclick="showCard(0)">
+                        <div class="card-icon">🎯</div>
+                        <h3>Objetivo</h3>
+                        <p class="text-muted mb-0"><small>Click para ver más</small></p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="intro-card text-card text-center" data-bs-toggle="modal" data-bs-target="#cardModal" onclick="showCard(1)">
+                        <div class="card-icon">👋</div>
+                        <h3>Introduction</h3>
+                        <p class="text-muted mb-0"><small>Click para ver más</small></p>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="intro-card video-card text-center" data-bs-toggle="modal" data-bs-target="#cardModal" onclick="showCard(2)">
+                        <div class="card-icon">🎥</div>
+                        <h3>Video Presentation</h3>
+                        <p class="text-muted mb-0"><small>Click para ver más</small></p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-book"></i> Conceptos Fundamentales</h2>
+            
+            <div class="row g-4 mb-5">
+                <div class="col-lg-6">
+                    <div class="concept-card variation-card">
+                        <h3><i class="bi bi-arrow-repeat"></i> VARIACIONES</h3>
+                        <p><strong>Definición:</strong> Arreglos de elementos donde <em>EL ORDEN SÍ IMPORTA</em></p>
+                        
+                        <div class="formula-box my-3">
+                            V(n,r) = n! / (n-r)!
+                        </div>
+                        
+                        <ul class="list-unstyled">
+                            <li>✅ El orden es relevante</li>
+                            <li>✅ (A,B) ≠ (B,A)</li>
+                            <li>✅ Se usan para: ranking, posiciones, códigos</li>
+                            <li>✅ Permutaciones cuando r = n</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="concept-card combination-card">
+                        <h3><i class="bi bi-dice-3"></i> COMBINACIONES</h3>
+                        <p><strong>Definición:</strong> Selecciones de elementos donde <em>EL ORDEN NO IMPORTA</em></p>
+                        
+                        <div class="formula-box my-3">
+                            C(n,r) = n! / (r!(n-r)!)
+                        </div>
+                        
+                        <ul class="list-unstyled">
+                            <li>✅ El orden es irrelevante</li>
+                            <li>✅ {A,B} = {B,A}</li>
+                            <li>✅ Se usan para: grupos, equipos, subconjuntos</li>
+                            <li>✅ Siempre C(n,r) ≤ V(n,r)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-clipboard-check"></i> Ejemplo Específico: Selección de Estudiantes</h2>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4><i class="bi bi-mortarboard"></i> Contexto del Problema</h4>
+                    <p><strong>Situación:</strong> Tenemos 5 estudiantes: Ana (A), Bruno (B), Carlos (C), Diana (D) y Elena (E)</p>
+                    <p><strong>Objetivo:</strong> Queremos seleccionar 3 estudiantes</p>
+                    
+                    <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                        <span class="badge bg-info fs-6 p-2">👩 Ana</span>
+                        <span class="badge bg-success fs-6 p-2">👨 Bruno</span>
+                        <span class="badge bg-warning fs-6 p-2">👨 Carlos</span>
+                        <span class="badge bg-danger fs-6 p-2">👩 Diana</span>
+                        <span class="badge bg-primary fs-6 p-2">👩 Elena</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-danger text-white">
+                            <h4 class="mb-0"><i class="bi bi-arrow-repeat"></i> CASO 1: VARIACIONES</h4>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Situación:</strong> Seleccionar Presidente, Vicepresidente y Secretario</p>
+                            <p class="fst-italic">El orden SÍ importa porque son cargos diferentes</p>
+                            
+                            <div class="calculation-step my-3">
+                                <strong>Cálculo:</strong><br>
+                                V(5,3) = 5! / (5-3)! = 5! / 2! = 120 / 2 = 60
+                            </div>
+                            
+                            <div class="d-flex justify-content-around align-items-center flex-wrap gap-3 my-3">
+                                <div class="demo-item variation-demo">
+                                    <strong>Opción 1</strong><br>
+                                    Pres: Ana<br>
+                                    Vice: Bruno<br>
+                                    Sec: Carlos
+                                </div>
+                                <div class="fs-2">≠</div>
+                                <div class="demo-item variation-demo">
+                                    <strong>Opción 2</strong><br>
+                                    Pres: Bruno<br>
+                                    Vice: Ana<br>
+                                    Sec: Carlos
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-success text-center">
+                                <strong>Resultado:</strong> 60 formas diferentes
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-header bg-info text-white">
+                            <h4 class="mb-0"><i class="bi bi-dice-3"></i> CASO 2: COMBINACIONES</h4>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Situación:</strong> Formar un equipo de trabajo de 3 personas</p>
+                            <p class="fst-italic">El orden NO importa porque todos son miembros iguales</p>
+                            
+                            <div class="calculation-step my-3">
+                                <strong>Cálculo:</strong><br>
+                                C(5,3) = 5! / (3!(5-3)!) = 5! / (3!×2!) = 120 / (6×2) = 10
+                            </div>
+                            
+                            <div class="d-flex justify-content-around align-items-center flex-wrap gap-3 my-3">
+                                <div class="demo-item combination-demo">
+                                    <strong>Equipo A</strong><br>
+                                    {Ana, Bruno, Carlos}
+                                </div>
+                                <div class="fs-2">=</div>
+                                <div class="demo-item combination-demo">
+                                    <strong>Equipo B</strong><br>
+                                    {Bruno, Carlos, Ana}
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info text-center">
+                                <strong>Resultado:</strong> 10 equipos diferentes
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-graph-up"></i> Comparación Detallada</h2>
+            
+            <div class="table-responsive mb-5">
+                <table class="table table-striped table-hover">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Variaciones V(5,3)</th>
+                            <th>Combinaciones C(5,3)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fórmula</strong></td>
+                            <td>5! / (5-3)! = 5!/2!</td>
+                            <td>5! / (3!(5-3)!) = 5!/(3!×2!)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Cálculo</strong></td>
+                            <td>120 / 2 = 60</td>
+                            <td>120 / (6×2) = 10</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orden importa</strong></td>
+                            <td>✅ SÍ</td>
+                            <td>❌ NO</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ejemplo</strong></td>
+                            <td>Presidente, Vice, Secretario</td>
+                            <td>Equipo de trabajo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Resultado</strong></td>
+                            <td><strong class="text-danger">60 formas</strong></td>
+                            <td><strong class="text-info">10 formas</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-key"></i> Diferencias Clave</h2>
+            
+            <div class="key-differences mb-5">
+                <div class="difference-item">
+                    <span class="difference-icon">🔄</span>
+                    <div>
+                        <strong>Orden:</strong> En variaciones, (A,B,C) es diferente de (B,A,C). 
+                        En combinaciones, {A,B,C} es igual a {B,A,C}
+                    </div>
+                </div>
+                
+                <div class="difference-item">
+                    <span class="difference-icon">🧮</span>
+                    <div>
+                        <strong>Cantidad de resultados:</strong> Las variaciones siempre producen más resultados 
+                        que las combinaciones para los mismos valores de n y r
+                    </div>
+                </div>
+                
+                <div class="difference-item">
+                    <span class="difference-icon">🎯</span>
+                    <div>
+                        <strong>Aplicaciones:</strong> Variaciones para roles/posiciones específicas; 
+                        Combinaciones para grupos/conjuntos sin jerarquía
+                    </div>
+                </div>
+                
+                <div class="difference-item">
+                    <span class="difference-icon">📐</span>
+                    <div>
+                        <strong>Relación matemática:</strong> C(n,r) = V(n,r) / r! porque dividimos 
+                        entre todas las permutaciones posibles de r elementos
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-calculator"></i> Calculadora Interactiva</h2>
+            
+            <div class="interactive-section mb-5">
+                <h4 class="text-center mb-4">Prueba con Diferentes Valores</h4>
+                
+                <div class="row justify-content-center mb-4">
+                    <div class="col-auto">
+                        <label class="form-label">n (total):</label>
+                        <input type="number" id="nValue" class="form-control" min="1" max="10" value="5">
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label">r (seleccionar):</label>
+                        <input type="number" id="rValue" class="form-control" min="1" max="10" value="3">
+                    </div>
+                </div>
+                
+                <div class="text-center mb-3">
+                    <button class="btn btn-primary btn-lg me-2" onclick="calculateBoth()">
+                        <i class="bi bi-calculator"></i> Calcular
+                    </button>
+                    <button class="btn btn-secondary btn-lg" onclick="showAllCombinations()">
+                        <i class="bi bi-list-ul"></i> Mostrar Todas
+                    </button>
+                </div>
+                
+                <div id="calculatorOutput" class="mt-4">
+                    <p class="text-center text-muted">Presiona "Calcular" para ver los resultados...</p>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-play-circle"></i> Video Sustentación</h2>
+            
+            <div class="card mb-5">
+                <div class="card-body">
+                    
+                    <div class="video-container">
+                        <video src="Presentación Diapositivas Academia de Matemáticas Ilustrado Rosa y Azul.mp4" allowfullscreen controls></video>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title"><i class="bi bi-check-circle"></i> Conclusiones</h2>
+            
+            <div class="result-highlight">
+                <h4 class="mb-3">Puntos Clave para Recordar</h4>
+                <ul class="text-start">
+                    <li class="mb-2"><strong>Variaciones:</strong> Usar cuando el orden/posición importa (ranking, cargos, códigos)</li>
+                    <li class="mb-2"><strong>Combinaciones:</strong> Usar cuando solo importa la selección (equipos, grupos, subconjuntos)</li>
+                    <li class="mb-2"><strong>Relación:</strong> V(n,r) = C(n,r) × r! (las variaciones incluyen todas las permutaciones)</li>
+                    <li class="mb-2"><strong>Práctica:</strong> Siempre pregúntate: "¿El orden cambia el resultado?"</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="cardModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" id="modalHeader">
+                    <h3 class="modal-title" id="modalTitle"></h3>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="modalBody"></div>
+                <div class="modal-footer justify-content-between">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="prevCard()">
+                        <i class="bi bi-arrow-left"></i> Anterior
+                    </button>
+                    <span id="cardCounter" class="text-muted"></span>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextCard()">
+                        Siguiente <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const cards = [
+            {
+                icon: '🎯',
+                title: 'Objetivo de la Presentación',
+                type: 'objective',
+                content: `
+                    <p>Esta presentación tiene como objetivo explicar de manera visual y práctica las diferencias fundamentales 
+                    entre <strong>variaciones</strong> y <strong>combinaciones</strong> en matemáticas combinatorias.</p>
+                    <p>Aprenderás a:</p>
+                    <ul class="fs-5 lh-lg">
+                        <li>Identificar cuándo usar variaciones y cuándo combinaciones</li>
+                        <li>Comprender la importancia del orden en los elementos</li>
+                        <li>Aplicar las fórmulas correctamente en diferentes escenarios</li>
+                        <li>Resolver problemas prácticos de combinatoria</li>
+                    </ul>
+                `
+            },
+            {
+                icon: '👋',
+                title: 'Personal Introduction',
+                type: 'text',
+                content: `
+                    <p class="fs-5"><strong>Hello everyone! My name is Laura Baquero.</strong></p>
+                    <p>Today I will present a comprehensive analysis of the fundamental differences between variations and combinations 
+                    in combinatorial mathematics. This presentation will include visual demonstrations, practical examples, 
+                    and interactive elements to help understand these important mathematical concepts.</p>
+                    <p>Let's explore how the order of elements affects our counting strategies in different scenarios. 
+                    Understanding these concepts is crucial for solving real-world problems in probability, statistics, 
+                    and many areas of mathematics and computer science.</p>
+                `
+            },
+            {
+                icon: '🎥',
+                title: 'Video Presentation',
+                type: 'video',
+                content: `
+                    <div class="video-container">
+                        <video src="VID_20251006_110507_081.mp4" controls>
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <p class="mt-3">Watch the video presentation to get a personal introduction and overview of the topics we'll be covering.</p>
+                `
+            }
+        ];
+
+        let currentCardIndex = 0;
+
+        function showCard(index) {
+            currentCardIndex = index;
+            const card = cards[index];
+            const modalHeader = document.getElementById('modalHeader');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const cardCounter = document.getElementById('cardCounter');
+
+            modalHeader.className = 'modal-header ' + card.type;
+            modalTitle.innerHTML = `<span class="me-2">${card.icon}</span>${card.title}`;
+            modalBody.innerHTML = card.content;
+            cardCounter.textContent = `Card ${index + 1} de ${cards.length}`;
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === cards.length - 1;
+
+            if (card.type === 'video') {
+                setTimeout(() => {
+                    const video = modalBody.querySelector('video');
+                    if (video) video.play().catch(e => console.log('Autoplay prevented'));
+                }, 300);
+            }
+        }
+
+        function nextCard() {
+            if (currentCardIndex < cards.length - 1) {
+                currentCardIndex++;
+                showCard(currentCardIndex);
+            }
+        }
+
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+                showCard(currentCardIndex);
+            }
+        }
+
+        function factorial(n) {
+            if (n <= 1) return 1;
+            return n * factorial(n - 1);
+        }
+
+        function variations(n, r) {
+            if (r > n) return 0;
+            return factorial(n) / factorial(n - r);
+        }
+
+        function combinations(n, r) {
+            if (r > n) return 0;
+            return factorial(n) / (factorial(r) * factorial(n - r));
+        }
+
+        function calculateBoth() {
+            const n = parseInt(document.getElementById('nValue').value);
+            const r = parseInt(document.getElementById('rValue').value);
+            const output = document.getElementById('calculatorOutput');
+
+            if (r > n) {
+                output.innerHTML = '<div class="alert alert-danger">❌ Error: r no puede ser mayor que n</div>';
+                return;
+            }
+
+            const v = variations(n, r);
+            const c = combinations(n, r);
+
+            output.innerHTML = `
+                <h5 class="text-center mb-4">Resultados para n=${n}, r=${r}:</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="card border-danger">
+                            <div class="card-header bg-danger text-white">
+                                <h6 class="mb-0">🔄 VARIACIONES</h6>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Fórmula:</strong> V(${n},${r}) = ${n}!/(${n}-${r})!</p>
+                                <p><strong>Cálculo:</strong> ${factorial(n)}/${factorial(n-r)} = <span class="fs-4 text-danger fw-bold">${v}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-info">
+                            <div class="card-header bg-info text-white">
+                                <h6 class="mb-0">🎲 COMBINACIONES</h6>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Fórmula:</strong> C(${n},${r}) = ${n}!/(${r}!×(${n}-${r})!)</p>
+                                <p><strong>Cálculo:</strong> ${factorial(n)}/(${factorial(r)}×${factorial(n-r)}) = <span class="fs-4 text-info fw-bold">${c}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-success mt-3">
+                    <p class="mb-1"><strong>📈 Comparación:</strong> Las variaciones dan ${v} resultados vs ${c} combinaciones</p>
+                    <p class="mb-0"><strong>🔗 Relación:</strong> V(${n},${r}) = C(${n},${r}) × ${r}! → ${v} = ${c} × ${factorial(r)}</p>
+                </div>
+            `;
+        }
+
+        function generateCombinations(arr, r) {
+            if (r === 1) return arr.map(x => [x]);
+            if (r === arr.length) return [arr];
+
+            const result = [];
+            for (let i = 0; i < arr.length - r + 1; i++) {
+                const rest = generateCombinations(arr.slice(i + 1), r - 1);
+                rest.forEach(comb => result.push([arr[i]].concat(comb)));
+            }
+            return result;
+        }
+
+        function showAllCombinations() {
+            const n = parseInt(document.getElementById('nValue').value);
+            const r = parseInt(document.getElementById('rValue').value);
+            const output = document.getElementById('calculatorOutput');
+
+            if (n > 6 || r > 4) {
+                output.innerHTML = '<div class="alert alert-warning">⚠️ Para mejor visualización, usa valores menores (n≤6, r≤4)</div>';
+                return;
+            }
+
+            const elements = [];
+            for (let i = 0; i < n; i++) {
+                elements.push(String.fromCharCode(65 + i));
+            }
+
+            const combs = generateCombinations(elements, r);
+
+            let html = `<h5 class="text-center mb-3">📋 Todas las combinaciones C(${n},${r}) = ${combs.length}:</h5>`;
+            html += '<div class="row g-2">';
+
+            combs.forEach((comb, index) => {
+                html += `<div class="col-6 col-md-4 col-lg-3">
+                    <div class="badge bg-primary w-100 p-2 fs-6">{${comb.join(',')}}</div>
+                </div>`;
+            });
+
+            html += '</div>';
+            output.innerHTML = html;
+        }
+
+        window.onload = function() {
+            calculateBoth();
+        };
+    </script>
+</body>
+</html>
